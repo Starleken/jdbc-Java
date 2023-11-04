@@ -1,50 +1,50 @@
 package repositories;
 
 import entities.Customer;
-import entities.Product;
+import entities.OrderItemNote;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
 import scripts.mappers.DbCustomerMapper;
-import scripts.mappers.DbProductMapper;
+import scripts.mappers.DbOrderItemNoteMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static scripts.constants.CustomerQueriesConstants.*;
+import static scripts.constants.OrderItemNoteQueriesConstants.*;
 
-public class CustomerRepository implements CRUD<Customer> {
+public class OrderItemNoteRepository implements CRUD<OrderItemNote> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
 
-    public CustomerRepository(DbConnection connection) {
+    public OrderItemNoteRepository(DbConnection connection) {
         this.connection = connection;
 
         connectionCloser = new ConnectionCloser();
     }
 
     @Override
-    public void create(Customer customer) {
+    public void create(OrderItemNote orderItemNote) {
         PreparedStatement pstmt = null;
 
         try{
             pstmt = connection.getOpenConnection().prepareStatement(INSERT_QUERY);
-            pullPreparedStatement(pstmt, customer);
+            pullPreparedStatement(pstmt, orderItemNote);
 
             int insert_rows = pstmt.executeUpdate();
 
-            System.out.println("CustomerRepository -> created "+insert_rows+" customer(s)");
+            System.out.println("OrderItemNoteRepository -> created "+insert_rows+" orderItemNote(es)");
         } catch (SQLException ex){
-            throw new RuntimeException("Create Customer error", ex);
+            throw new RuntimeException("Create OrderItemNote error", ex);
         } finally {
             connectionCloser.close(connection, pstmt);
         }
     }
 
     @Override
-    public List<Customer> findAll() {
+    public List<OrderItemNote> findAll() {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
@@ -52,20 +52,20 @@ public class CustomerRepository implements CRUD<Customer> {
             pstmt = connection.getOpenConnection().prepareStatement(FIND_ALL_QUERY);
             rs = pstmt.executeQuery();
 
-            List<Customer> customers = new DbCustomerMapper().mapAll(rs);
+            List<OrderItemNote> orderItemNotes = new DbOrderItemNoteMapper().mapAll(rs);
 
-            System.out.println("CustomerRepository -> found "+customers.size()+" Customer(s)");
+            System.out.println("OrderItemNoteRepository -> found "+ orderItemNotes.size()+ " orderItemNote(s)");
 
-            return customers;
+            return orderItemNotes;
         } catch (SQLException ex){
-            throw new RuntimeException("FindAll Customer error", ex);
+            throw new RuntimeException("FindAll OrderItemNote error", ex);
         } finally {
             connectionCloser.close(connection, rs, pstmt);
         }
     }
 
     @Override
-    public Customer findById(int id){
+    public OrderItemNote findById(int id) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
@@ -74,38 +74,38 @@ public class CustomerRepository implements CRUD<Customer> {
 
             rs = pstmt.executeQuery();
 
-            Customer customer = new DbCustomerMapper().mapFirst(rs);
+            OrderItemNote orderItemNote = new DbOrderItemNoteMapper().mapFirst(rs);
 
-            System.out.println("CustomerRepository -> found "+ customer);
+            System.out.println("OrderItemNoteRepository -> found "+ orderItemNote);
 
-            return customer;
+            return orderItemNote;
         } catch(SQLException ex){
-            throw new RuntimeException("FindById customer error", ex);
+            throw new RuntimeException("FindById orderItemNote error", ex);
         } finally {
             connectionCloser.close(connection, rs, pstmt);
         }
     }
 
     @Override
-    public void update(Customer customer) {
+    public void update(OrderItemNote orderItemNote) {
         PreparedStatement pstmt = null;
         try{
             pstmt = connection.getOpenConnection().prepareStatement(UPDATE_QUERY);
-            pullPreparedStatement(pstmt, customer);
-            pstmt.setInt(9, customer.getId());
+            pullPreparedStatement(pstmt, orderItemNote);
+            pstmt.setInt(5, orderItemNote.getId());
 
             int updatedRows = pstmt.executeUpdate();
 
-            System.out.println("CustomerRepository -> updated "+ updatedRows + " customer(s)");
+            System.out.println("OrderItemNoteRepository -> updated "+ updatedRows + " orderItemNote(s)");
         } catch(SQLException ex){
-            throw new RuntimeException("Update customer error", ex);
+            throw new RuntimeException("Update orderItemNote error", ex);
         } finally {
             connectionCloser.close(connection, pstmt);
         }
     }
 
     @Override
-    public void delete(int id){
+    public void delete(int id) {
         PreparedStatement pstmt = null;
 
         try{
@@ -114,22 +114,18 @@ public class CustomerRepository implements CRUD<Customer> {
 
             int deletedRows = pstmt.executeUpdate();
 
-            System.out.println("CustomerRepository -> deleted " + deletedRows + " customer(s)" );
+            System.out.println("OrderItemNoteRepository -> deleted " + deletedRows + " orderItemNote(s)" );
         } catch(SQLException ex){
-            throw new RuntimeException("Delete customer error", ex);
+            throw new RuntimeException("Delete orderItemNote error", ex);
         } finally {
             connectionCloser.close(connection, pstmt);
         }
     }
 
-    private void pullPreparedStatement(PreparedStatement pstmt, Customer customer) throws SQLException{
-        pstmt.setString(1, customer.getFirstName());
-        pstmt.setString(2, customer.getLastName());
-        pstmt.setDate(3, customer.getBirthDate());
-        pstmt.setString(4, customer.getPhone());
-        pstmt.setString(5, customer.getAddress());
-        pstmt.setString(6, customer.getCity());
-        pstmt.setString(7, customer.getState());
-        pstmt.setInt(8, customer.getPoints());
+    private void pullPreparedStatement(PreparedStatement pstmt, OrderItemNote orderItemNote) throws SQLException {
+        pstmt.setInt(1, orderItemNote.getId());
+        pstmt.setInt(2, orderItemNote.getOrderId());
+        pstmt.setInt(3, orderItemNote.getProductId());
+        pstmt.setString(4, orderItemNote.getNote());
     }
 }

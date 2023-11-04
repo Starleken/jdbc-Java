@@ -1,10 +1,11 @@
-package Scripts.Interfaces;
+package scripts.interfaces;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
-public interface IDbMapper<T> {
-    public T mapFirst(ResultSet rs) throws Exception;
+public interface DbMapper<T> {
+    public T mapFirst(ResultSet rs) throws SQLException;
 
-    public List<T> mapAll(ResultSet rs) throws Exception;
+    public List<T> mapAll(ResultSet rs) throws SQLException;
 }

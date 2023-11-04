@@ -1,6 +1,5 @@
-package Scripts.Database;
+package scripts.database;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,30 +23,30 @@ public class ConnectionCloser {
 
     private void closeConnection(DbConnection connection){
         try {
-            if (connection != null)
+            if (connection != null) {
                 connection.closeConnection();
-        }
-        catch (SQLException ex){
+            }
+        } catch (SQLException ex){
             System.out.println("Can not close connection");
         }
     }
 
     private void closeResultSet(ResultSet rs){
         try {
-            if (rs != null)
+            if (rs != null) {
                 rs.close();
-        }
-        catch (SQLException ex){
+            }
+        } catch (SQLException ex){
             System.out.println("Can not close resultSet");
         }
     }
 
     private void closeStatement(Statement st){
         try {
-            if (st != null)
+            if (st != null){
                 st.close();
-        }
-        catch (SQLException ex){
+            }
+        } catch (SQLException ex){
             System.out.println("Can not close ResultSet");
         }
     }

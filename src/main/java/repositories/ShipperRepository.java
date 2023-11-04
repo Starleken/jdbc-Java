@@ -1,20 +1,19 @@
-package Repositories;
+package repositories;
 
-import Entities.Shipper;
-import Scripts.Database.ConnectionCloser;
-import Scripts.Database.DbConnection;
-import Scripts.Interfaces.ICRUD;
-import Scripts.Mappers.DbShipperMapper;
+import entities.Shipper;
+import scripts.database.ConnectionCloser;
+import scripts.database.DbConnection;
+import scripts.interfaces.CRUD;
+import scripts.mappers.DbShipperMapper;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static Scripts.Constants.ShipperQueriesConstants.*;
+import static scripts.constants.ShipperQueriesConstants.*;
 
-public class ShipperRepository implements ICRUD<Shipper> {
+public class ShipperRepository implements CRUD<Shipper> {
     private DbConnection dbConnection;
     private ConnectionCloser connectionCloser;
 
@@ -33,11 +32,9 @@ public class ShipperRepository implements ICRUD<Shipper> {
             int savedRow = pstmt.executeUpdate();
 
             System.out.println("ShipperRepository -> saved " + savedRow + " shipper(s)");
-        }
-        catch(SQLException ex){
+        } catch(SQLException ex){
             throw new RuntimeException("Create shipper error", ex);
-        }
-        finally {
+        } finally {
             connectionCloser.close(dbConnection, pstmt);
         }
     }
@@ -55,11 +52,9 @@ public class ShipperRepository implements ICRUD<Shipper> {
             System.out.println("ShipperRepository -> found " + shippers.size() + " shippers");
 
             return shippers;
-        }
-        catch(SQLException ex){
+        } catch(SQLException ex){
             throw new RuntimeException("Read shippers error", ex);
-        }
-        finally {
+        } finally {
             connectionCloser.close(dbConnection, rs, pstmt);
         }
     }
@@ -78,14 +73,11 @@ public class ShipperRepository implements ICRUD<Shipper> {
             System.out.println("ShipperRepository -> found "+ shipper);
 
             return shipper;
-        }
-        catch(SQLException ex){
+        } catch(SQLException ex){
             throw new RuntimeException("Find by id shipper error", ex);
-        }
-        finally {
+        } finally {
             connectionCloser.close(dbConnection, rs, pstmt);
         }
-
     }
 
     public void update(Shipper entity){
@@ -98,14 +90,11 @@ public class ShipperRepository implements ICRUD<Shipper> {
             int updatedRows = pstmt.executeUpdate();
 
             System.out.println("Updated "+ updatedRows + " shipper(s)");
-        }
-        catch(SQLException ex){
+        } catch(SQLException ex){
             throw new RuntimeException("Update shipper error", ex);
-        }
-        finally {
+        } finally {
             connectionCloser.close(dbConnection, pstmt);
         }
-
     }
 
     public void delete(int id) {
@@ -118,13 +107,10 @@ public class ShipperRepository implements ICRUD<Shipper> {
             int deletedRows = pstmt.executeUpdate();
 
             System.out.println("ShipperRepository -> deleted " + deletedRows + " shipper(s)" );
-        }
-        catch(SQLException ex){
+        } catch(SQLException ex){
             throw new RuntimeException("Delete shipper error", ex);
-        }
-        finally {
+        } finally {
             connectionCloser.close(dbConnection, pstmt);
         }
-
     }
 }

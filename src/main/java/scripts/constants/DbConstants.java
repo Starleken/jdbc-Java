@@ -1,4 +1,4 @@
-package Scripts.Constants;
+package scripts.constants;
 
 public class DbConstants {
     public static final String DB_URL = "jdbc:mysql://localhost:3306/test";

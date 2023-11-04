@@ -1,4 +1,4 @@
-package Scripts.Database;
+package scripts.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

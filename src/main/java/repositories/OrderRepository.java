@@ -1,50 +1,51 @@
 package repositories;
 
 import entities.Customer;
-import entities.Product;
+import entities.Order;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
 import scripts.mappers.DbCustomerMapper;
-import scripts.mappers.DbProductMapper;
+import scripts.mappers.DbOrderMapper;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
-import static scripts.constants.CustomerQueriesConstants.*;
+import static scripts.constants.OrderQueriesConstants.*;
 
-public class CustomerRepository implements CRUD<Customer> {
+public class OrderRepository implements CRUD<Order> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
 
-    public CustomerRepository(DbConnection connection) {
+    public OrderRepository(DbConnection connection) {
         this.connection = connection;
 
         connectionCloser = new ConnectionCloser();
     }
 
     @Override
-    public void create(Customer customer) {
+    public void create(Order order) {
         PreparedStatement pstmt = null;
 
         try{
             pstmt = connection.getOpenConnection().prepareStatement(INSERT_QUERY);
-            pullPreparedStatement(pstmt, customer);
+            pullPreparedStatement(pstmt, order);
 
             int insert_rows = pstmt.executeUpdate();
 
-            System.out.println("CustomerRepository -> created "+insert_rows+" customer(s)");
+            System.out.println("OrderRepository -> created "+insert_rows+" order(s)");
         } catch (SQLException ex){
-            throw new RuntimeException("Create Customer error", ex);
+            throw new RuntimeException("Create Order error", ex);
         } finally {
             connectionCloser.close(connection, pstmt);
         }
     }
 
     @Override
-    public List<Customer> findAll() {
+    public List<Order> findAll() {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
@@ -52,20 +53,20 @@ public class CustomerRepository implements CRUD<Customer> {
             pstmt = connection.getOpenConnection().prepareStatement(FIND_ALL_QUERY);
             rs = pstmt.executeQuery();
 
-            List<Customer> customers = new DbCustomerMapper().mapAll(rs);
+            List<Order> orders = new DbOrderMapper().mapAll(rs);
 
-            System.out.println("CustomerRepository -> found "+customers.size()+" Customer(s)");
+            System.out.println("OrderRepository -> found "+ orders.size()+" order(s)");
 
-            return customers;
+            return orders;
         } catch (SQLException ex){
-            throw new RuntimeException("FindAll Customer error", ex);
+            throw new RuntimeException("FindAll Order error", ex);
         } finally {
             connectionCloser.close(connection, rs, pstmt);
         }
     }
 
     @Override
-    public Customer findById(int id){
+    public Order findById(int id) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
@@ -74,38 +75,38 @@ public class CustomerRepository implements CRUD<Customer> {
 
             rs = pstmt.executeQuery();
 
-            Customer customer = new DbCustomerMapper().mapFirst(rs);
+            Order order = new DbOrderMapper().mapFirst(rs);
 
-            System.out.println("CustomerRepository -> found "+ customer);
+            System.out.println("OrderRepository -> found " + order);
 
-            return customer;
+            return order;
         } catch(SQLException ex){
-            throw new RuntimeException("FindById customer error", ex);
+            throw new RuntimeException("FindById order error", ex);
         } finally {
             connectionCloser.close(connection, rs, pstmt);
         }
     }
 
     @Override
-    public void update(Customer customer) {
+    public void update(Order order) {
         PreparedStatement pstmt = null;
         try{
             pstmt = connection.getOpenConnection().prepareStatement(UPDATE_QUERY);
-            pullPreparedStatement(pstmt, customer);
-            pstmt.setInt(9, customer.getId());
+            pullPreparedStatement(pstmt, order);
+            pstmt.setInt(7, order.getId());
 
             int updatedRows = pstmt.executeUpdate();
 
-            System.out.println("CustomerRepository -> updated "+ updatedRows + " customer(s)");
+            System.out.println("OrderRepository -> updated "+ updatedRows + " order(s)");
         } catch(SQLException ex){
-            throw new RuntimeException("Update customer error", ex);
+            throw new RuntimeException("Update order error", ex);
         } finally {
             connectionCloser.close(connection, pstmt);
         }
     }
 
     @Override
-    public void delete(int id){
+    public void delete(int id) {
         PreparedStatement pstmt = null;
 
         try{
@@ -114,22 +115,27 @@ public class CustomerRepository implements CRUD<Customer> {
 
             int deletedRows = pstmt.executeUpdate();
 
-            System.out.println("CustomerRepository -> deleted " + deletedRows + " customer(s)" );
+            System.out.println("OrderRepository -> deleted " + deletedRows + " order(s)" );
         } catch(SQLException ex){
-            throw new RuntimeException("Delete customer error", ex);
+            throw new RuntimeException("Delete order error", ex);
         } finally {
             connectionCloser.close(connection, pstmt);
         }
     }
 
-    private void pullPreparedStatement(PreparedStatement pstmt, Customer customer) throws SQLException{
-        pstmt.setString(1, customer.getFirstName());
-        pstmt.setString(2, customer.getLastName());
-        pstmt.setDate(3, customer.getBirthDate());
-        pstmt.setString(4, customer.getPhone());
-        pstmt.setString(5, customer.getAddress());
-        pstmt.setString(6, customer.getCity());
-        pstmt.setString(7, customer.getState());
-        pstmt.setInt(8, customer.getPoints());
+    private void pullPreparedStatement(PreparedStatement pstmt, Order order) throws SQLException{
+        pstmt.setInt(1, order.getCustomerId());
+        pstmt.setDate(2, order.getDate());
+        pstmt.setInt(3, order.getStatusId());
+        pstmt.setString(4, order.getComments());
+        pstmt.setDate(5, order.getShippedDate());
+
+        if (order.getShipperId() == 0){
+            pstmt.setNull(6, Types.INTEGER);
+        }
+        else{
+            pstmt.setInt(6, order.getShipperId());
+        }
+
     }
 }
