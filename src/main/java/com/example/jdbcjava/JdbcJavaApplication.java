@@ -5,6 +5,7 @@ import repositories.*;
 import scripts.database.DbConnection;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import scripts.primaryKeys.OrderItemPrimaryKey;
 
 import static scripts.constants.DbConstants.*;
 
@@ -16,7 +17,11 @@ public class JdbcJavaApplication {
 
         DbConnection connection = new DbConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
 
-        OrderRepository repository = new OrderRepository(connection);
+        OrderItemRepository repository = new OrderItemRepository(connection);
+
+        OrderItem orderItem = new OrderItem(10,3,10,10.2);
+        orderItem.setQuantity(12);
+        repository.delete(new OrderItemPrimaryKey(orderItem.getOrderId(), orderItem.getProductId()));
     }
 
 }

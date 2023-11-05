@@ -15,7 +15,7 @@ import java.util.List;
 
 import static scripts.constants.CustomerQueriesConstants.*;
 
-public class CustomerRepository implements CRUD<Customer> {
+public class CustomerRepository implements CRUD<Customer, Integer> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
 
@@ -65,7 +65,7 @@ public class CustomerRepository implements CRUD<Customer> {
     }
 
     @Override
-    public Customer findById(int id){
+    public Customer findById(Integer id){
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
@@ -105,7 +105,7 @@ public class CustomerRepository implements CRUD<Customer> {
     }
 
     @Override
-    public void delete(int id){
+    public void delete(Integer id){
         PreparedStatement pstmt = null;
 
         try{

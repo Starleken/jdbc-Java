@@ -13,7 +13,7 @@ import java.util.List;
 
 import static scripts.constants.ShipperQueriesConstants.*;
 
-public class ShipperRepository implements CRUD<Shipper> {
+public class ShipperRepository implements CRUD<Shipper, Integer> {
     private DbConnection dbConnection;
     private ConnectionCloser connectionCloser;
 
@@ -59,7 +59,7 @@ public class ShipperRepository implements CRUD<Shipper> {
         }
     }
 
-    public Shipper findById(int id) {
+    public Shipper findById(Integer id) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
@@ -97,7 +97,7 @@ public class ShipperRepository implements CRUD<Shipper> {
         }
     }
 
-    public void delete(int id) {
+    public void delete(Integer id) {
         PreparedStatement pstmt = null;
 
         try{

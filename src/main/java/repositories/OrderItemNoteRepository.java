@@ -15,7 +15,7 @@ import java.util.List;
 
 import static scripts.constants.OrderItemNoteQueriesConstants.*;
 
-public class OrderItemNoteRepository implements CRUD<OrderItemNote> {
+public class OrderItemNoteRepository implements CRUD<OrderItemNote, Integer> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
 
@@ -65,7 +65,7 @@ public class OrderItemNoteRepository implements CRUD<OrderItemNote> {
     }
 
     @Override
-    public OrderItemNote findById(int id) {
+    public OrderItemNote findById(Integer id) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
@@ -105,7 +105,7 @@ public class OrderItemNoteRepository implements CRUD<OrderItemNote> {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
         PreparedStatement pstmt = null;
 
         try{

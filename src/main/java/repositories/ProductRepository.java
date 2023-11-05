@@ -4,6 +4,7 @@ import entities.OrderItemNote;
 import entities.Product;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
+import scripts.interfaces.CRUD;
 import scripts.mappers.DbProductMapper;
 
 import java.sql.PreparedStatement;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import static scripts.constants.ProductQueriesConstants.*;
 
-public class ProductRepository {
+public class ProductRepository implements CRUD<Product, Integer> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
 
@@ -60,7 +61,7 @@ public class ProductRepository {
         }
     }
 
-    public Product findById(int id){
+    public Product findById(Integer id){
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
@@ -98,7 +99,7 @@ public class ProductRepository {
         }
     }
 
-    public void delete(int id){
+    public void delete(Integer id){
         PreparedStatement pstmt = null;
 
         try{

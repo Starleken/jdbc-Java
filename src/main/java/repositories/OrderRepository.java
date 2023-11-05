@@ -16,7 +16,7 @@ import java.util.List;
 
 import static scripts.constants.OrderQueriesConstants.*;
 
-public class OrderRepository implements CRUD<Order> {
+public class OrderRepository implements CRUD<Order, Integer> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
 
@@ -66,7 +66,7 @@ public class OrderRepository implements CRUD<Order> {
     }
 
     @Override
-    public Order findById(int id) {
+    public Order findById(Integer id) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
@@ -106,7 +106,7 @@ public class OrderRepository implements CRUD<Order> {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Integer id) {
         PreparedStatement pstmt = null;
 
         try{

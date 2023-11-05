@@ -7,6 +7,7 @@ import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
 import scripts.mappers.DbOrderItemMapper;
 import scripts.mappers.DbOrderMapper;
+import scripts.primaryKeys.OrderItemPrimaryKey;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static scripts.constants.OrderItemQueriesConstants.*;
 
-public class OrderItemRepository implements CRUD<OrderItem> {
+public class OrderItemRepository implements CRUD<OrderItem, OrderItemPrimaryKey> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
 
@@ -65,12 +66,13 @@ public class OrderItemRepository implements CRUD<OrderItem> {
     }
 
     @Override
-    public OrderItem findById(int id) {
+    public OrderItem findById(OrderItemPrimaryKey id) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
             pstmt = connection.getOpenConnection().prepareStatement(FIND_BY_ID_QUERY);
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, id.getOrderId());
+            pstmt.setInt(2, id.getProductId());
 
             rs = pstmt.executeQuery();
 
@@ -93,6 +95,7 @@ public class OrderItemRepository implements CRUD<OrderItem> {
             pstmt = connection.getOpenConnection().prepareStatement(UPDATE_QUERY);
             pullPreparedStatement(pstmt, orderItem);
             pstmt.setInt(5, orderItem.getOrderId());
+            pstmt.setInt(6, orderItem.getProductId());
 
             int updatedRows = pstmt.executeUpdate();
 
@@ -105,12 +108,13 @@ public class OrderItemRepository implements CRUD<OrderItem> {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(OrderItemPrimaryKey id) {
         PreparedStatement pstmt = null;
 
         try{
             pstmt = connection.getOpenConnection().prepareStatement(DELETE_QUERY);
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, id.getOrderId());
+            pstmt.setInt(2, id.getProductId());
 
             int deletedRows = pstmt.executeUpdate();
 

@@ -4,6 +4,7 @@ import entities.OrderStatus;
 import scripts.constants.OrderStatusQueriesConstants;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
+import scripts.interfaces.CRUD;
 import scripts.mappers.DbOrderStatusMapper;
 
 import java.sql.PreparedStatement;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import static scripts.constants.ShipperQueriesConstants.*;
 
-public class OrderStatusRepository {
+public class OrderStatusRepository implements CRUD<OrderStatus, Integer> {
     private ConnectionCloser closer;
     private DbConnection connection;
 
@@ -23,7 +24,7 @@ public class OrderStatusRepository {
         closer = new ConnectionCloser();
     }
 
-    public void create(OrderStatus orderStatus) throws Exception{
+    public void create(OrderStatus orderStatus) {
         PreparedStatement pstmt = null;
 
         try{
@@ -61,7 +62,7 @@ public class OrderStatusRepository {
         }
     }
 
-    public OrderStatus findById(int id){
+    public OrderStatus findById(Integer id){
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
@@ -100,7 +101,7 @@ public class OrderStatusRepository {
         }
     }
 
-    public void delete(int id){
+    public void delete(Integer id){
         PreparedStatement pstmt = null;
 
         try{
