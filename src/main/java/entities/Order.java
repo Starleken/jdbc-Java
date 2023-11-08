@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 public class Order {
-    private int id;
+    private Integer id;
     private Integer customerId;
     private Date date;
     private Integer statusId;
@@ -15,7 +15,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(int id, int customerId, Date date, int statusId, String comments, Date shippedDate, int shipperId) {
+    public Order(Integer id, Integer customerId, Date date, Integer statusId, String comments, Date shippedDate, Integer shipperId) {
         this.id = id;
         this.customerId = customerId;
         this.date = date;
@@ -25,7 +25,7 @@ public class Order {
         this.shipperId = shipperId;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -33,7 +33,7 @@ public class Order {
         this.id = id;
     }
 
-    public int getCustomerId() {
+    public Integer getCustomerId() {
         return customerId;
     }
 
@@ -49,7 +49,7 @@ public class Order {
         this.date = date;
     }
 
-    public int getStatusId() {
+    public Integer getStatusId() {
         return statusId;
     }
 
@@ -73,7 +73,7 @@ public class Order {
         this.shippedDate = shippedDate;
     }
 
-    public int getShipperId() {
+    public Integer getShipperId() {
         return shipperId;
     }
 

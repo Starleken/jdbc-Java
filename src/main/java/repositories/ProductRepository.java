@@ -5,6 +5,7 @@ import entities.Product;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
+import scripts.interfaces.DbMapper;
 import scripts.mappers.DbProductMapper;
 
 import java.sql.PreparedStatement;
@@ -17,11 +18,13 @@ import static scripts.constants.ProductQueriesConstants.*;
 public class ProductRepository implements CRUD<Product, Integer> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
+    private DbMapper<Product> mapper;
 
     public ProductRepository(DbConnection connection) {
         this.connection = connection;
 
         connectionCloser = new ConnectionCloser();
+        mapper = new DbProductMapper();
     }
 
     public void create(Product product) {
@@ -31,9 +34,9 @@ public class ProductRepository implements CRUD<Product, Integer> {
             pstmt = connection.getOpenConnection().prepareStatement(INSERT_QUERY);
             pullPreparedStatement(pstmt, product);
 
-            int insert_rows = pstmt.executeUpdate();
+            int insertedRows = pstmt.executeUpdate();
 
-            System.out.println("ProductRepository -> created "+insert_rows+" Product(s)");
+            System.out.println("ProductRepository -> created "+insertedRows+" Product(s)");
         } catch (SQLException ex){
             throw new RuntimeException("Create Product error", ex);
         } finally {
@@ -49,7 +52,7 @@ public class ProductRepository implements CRUD<Product, Integer> {
             pstmt = connection.getOpenConnection().prepareStatement(FIND_ALL_QUERY);
             rs = pstmt.executeQuery();
 
-            List<Product> products = new DbProductMapper().mapAll(rs);
+            List<Product> products = mapper.mapAll(rs);
 
             System.out.println("ProductRepository -> found "+products.size()+" Product(s)");
 
@@ -70,7 +73,7 @@ public class ProductRepository implements CRUD<Product, Integer> {
 
             rs = pstmt.executeQuery();
 
-            Product product = new DbProductMapper().mapFirst(rs);
+            Product product = mapper.mapFirst(rs);
 
             System.out.println("ProductRepository -> found "+ product);
 

@@ -5,6 +5,7 @@ import scripts.constants.OrderStatusQueriesConstants;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
+import scripts.interfaces.DbMapper;
 import scripts.mappers.DbOrderStatusMapper;
 
 import java.sql.PreparedStatement;
@@ -17,11 +18,13 @@ import static scripts.constants.ShipperQueriesConstants.*;
 public class OrderStatusRepository implements CRUD<OrderStatus, Integer> {
     private ConnectionCloser closer;
     private DbConnection connection;
+    private DbMapper<OrderStatus> mapper;
 
     public OrderStatusRepository(DbConnection connection) {
         this.connection = connection;
 
         closer = new ConnectionCloser();
+        mapper = new DbOrderStatusMapper();
     }
 
     public void create(OrderStatus orderStatus) {
@@ -32,9 +35,9 @@ public class OrderStatusRepository implements CRUD<OrderStatus, Integer> {
             pstmt.setInt(1, orderStatus.getId());
             pstmt.setString(2, orderStatus.getName());
 
-            int insert_rows = pstmt.executeUpdate();
+            int insertedRows = pstmt.executeUpdate();
 
-            System.out.println("OrderStatusRepository -> created "+insert_rows+" orderstatus(es)");
+            System.out.println("OrderStatusRepository -> created "+insertedRows+" orderstatus(es)");
         } catch (SQLException ex){
             throw new RuntimeException("Create OrderStatus error", ex);
         } finally {
@@ -50,7 +53,7 @@ public class OrderStatusRepository implements CRUD<OrderStatus, Integer> {
             pstmt = connection.getOpenConnection().prepareStatement(FIND_ALL_QUERY);
             rs = pstmt.executeQuery();
 
-            List<OrderStatus> orderStatuses = new DbOrderStatusMapper().mapAll(rs);
+            List<OrderStatus> orderStatuses = mapper.mapAll(rs);
 
             System.out.println("OrderStatusRepository -> found "+orderStatuses.size()+" OrderStatus(es)");
 
@@ -72,7 +75,7 @@ public class OrderStatusRepository implements CRUD<OrderStatus, Integer> {
 
             rs = pstmt.executeQuery();
 
-            OrderStatus orderStatus = new DbOrderStatusMapper().mapFirst(rs);
+            OrderStatus orderStatus = mapper.mapFirst(rs);
 
             System.out.println("OrderStatus -> Found "+orderStatus.toString()+"");
 

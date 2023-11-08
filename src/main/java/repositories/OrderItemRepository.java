@@ -5,6 +5,7 @@ import entities.OrderItem;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
+import scripts.interfaces.DbMapper;
 import scripts.mappers.DbOrderItemMapper;
 import scripts.mappers.DbOrderMapper;
 import scripts.primaryKeys.OrderItemPrimaryKey;
@@ -19,11 +20,13 @@ import static scripts.constants.OrderItemQueriesConstants.*;
 public class OrderItemRepository implements CRUD<OrderItem, OrderItemPrimaryKey> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
+    private DbMapper<OrderItem> mapper;
 
     public OrderItemRepository(DbConnection connection) {
         this.connection = connection;
 
         connectionCloser = new ConnectionCloser();
+        mapper = new DbOrderItemMapper();
     }
 
     @Override
@@ -34,9 +37,9 @@ public class OrderItemRepository implements CRUD<OrderItem, OrderItemPrimaryKey>
             pstmt = connection.getOpenConnection().prepareStatement(INSERT_QUERY);
             pullPreparedStatement(pstmt, orderItem);
 
-            int insert_rows = pstmt.executeUpdate();
+            int insertedRows = pstmt.executeUpdate();
 
-            System.out.println("OrderItemRepository -> created "+insert_rows+" orderItem(s)");
+            System.out.println("OrderItemRepository -> created "+insertedRows+" orderItem(s)");
         } catch (SQLException ex){
             throw new RuntimeException("Create orderItem error", ex);
         } finally {
@@ -53,7 +56,7 @@ public class OrderItemRepository implements CRUD<OrderItem, OrderItemPrimaryKey>
             pstmt = connection.getOpenConnection().prepareStatement(FIND_ALL_QUERY);
             rs = pstmt.executeQuery();
 
-            List<OrderItem> orderItems = new DbOrderItemMapper().mapAll(rs);
+            List<OrderItem> orderItems = mapper.mapAll(rs);
 
             System.out.println("OrderItemRepository -> found "+ orderItems.size()+" orderItem(s)");
 
@@ -76,7 +79,7 @@ public class OrderItemRepository implements CRUD<OrderItem, OrderItemPrimaryKey>
 
             rs = pstmt.executeQuery();
 
-            OrderItem orderItem = new DbOrderItemMapper().mapFirst(rs);
+            OrderItem orderItem = mapper.mapFirst(rs);
 
             System.out.println("OrderItemRepository -> found " + orderItem);
 

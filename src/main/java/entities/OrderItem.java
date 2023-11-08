@@ -3,22 +3,22 @@ package entities;
 import java.util.Objects;
 
 public class OrderItem {
-    private int orderId;
-    private int productId;
-    private int quantity;
-    private double unitPrice;
+    private Integer orderId;
+    private Integer productId;
+    private Integer quantity;
+    private Double unitPrice;
 
     public OrderItem() {
     }
 
-    public OrderItem(int orderId, int productId, int quantity, double unitPrice) {
+    public OrderItem(Integer orderId, Integer productId, Integer quantity, Double unitPrice) {
         this.orderId = orderId;
         this.productId = productId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
 
-    public int getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
@@ -26,7 +26,7 @@ public class OrderItem {
         this.orderId = orderId;
     }
 
-    public int getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
@@ -34,7 +34,7 @@ public class OrderItem {
         this.productId = productId;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -42,7 +42,7 @@ public class OrderItem {
         this.quantity = quantity;
     }
 
-    public double getUnitPrice() {
+    public Double getUnitPrice() {
         return unitPrice;
     }
 

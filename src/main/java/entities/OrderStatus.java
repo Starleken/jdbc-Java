@@ -3,18 +3,18 @@ package entities;
 import java.util.Objects;
 
 public class OrderStatus {
-    private int id;
+    private Integer id;
     private String name;
 
     public OrderStatus() {
     }
 
-    public OrderStatus(int id, String name) {
+    public OrderStatus(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

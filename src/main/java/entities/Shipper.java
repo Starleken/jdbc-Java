@@ -3,18 +3,18 @@ package entities;
 import java.util.Objects;
 
 public class Shipper {
-    private int shipperId;
+    private Integer shipperId;
     private String name;
 
     public Shipper() {
     }
 
-    public Shipper(int shipperId, String name) {
+    public Shipper(Integer shipperId, String name) {
         this.shipperId = shipperId;
         this.name = name;
     }
 
-    public int getShipperId() {
+    public Integer getShipperId() {
         return shipperId;
     }
 

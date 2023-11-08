@@ -4,6 +4,7 @@ import entities.Shipper;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
+import scripts.interfaces.DbMapper;
 import scripts.mappers.DbShipperMapper;
 
 import java.sql.PreparedStatement;
@@ -16,10 +17,13 @@ import static scripts.constants.ShipperQueriesConstants.*;
 public class ShipperRepository implements CRUD<Shipper, Integer> {
     private DbConnection dbConnection;
     private ConnectionCloser connectionCloser;
+    private DbMapper<Shipper> mapper;
 
     public ShipperRepository(DbConnection dbConnection) {
         this.dbConnection = dbConnection;
+
         this.connectionCloser = new ConnectionCloser();
+        mapper = new DbShipperMapper();
     }
 
     public void create(Shipper entity){
@@ -29,9 +33,9 @@ public class ShipperRepository implements CRUD<Shipper, Integer> {
             pstmt = dbConnection.getOpenConnection().prepareStatement(INSERT_QUERY);
             pstmt.setString(1, entity.getName());
 
-            int savedRow = pstmt.executeUpdate();
+            int insertedRows = pstmt.executeUpdate();
 
-            System.out.println("ShipperRepository -> saved " + savedRow + " shipper(s)");
+            System.out.println("ShipperRepository -> saved " + insertedRows + " shipper(s)");
         } catch(SQLException ex){
             throw new RuntimeException("Create shipper error", ex);
         } finally {
@@ -47,7 +51,7 @@ public class ShipperRepository implements CRUD<Shipper, Integer> {
             pstmt = dbConnection.getOpenConnection().prepareStatement(FIND_ALL_QUERY);
             rs = pstmt.executeQuery();
 
-            List<Shipper> shippers = new DbShipperMapper().mapAll(rs);
+            List<Shipper> shippers = mapper.mapAll(rs);
 
             System.out.println("ShipperRepository -> found " + shippers.size() + " shippers");
 
@@ -68,7 +72,7 @@ public class ShipperRepository implements CRUD<Shipper, Integer> {
 
             rs = pstmt.executeQuery();
 
-            Shipper shipper = new DbShipperMapper().mapFirst(rs);
+            Shipper shipper = mapper.mapFirst(rs);
 
             System.out.println("ShipperRepository -> found "+ shipper);
 

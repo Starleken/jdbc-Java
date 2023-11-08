@@ -5,6 +5,7 @@ import entities.OrderItemNote;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
+import scripts.interfaces.DbMapper;
 import scripts.mappers.DbCustomerMapper;
 import scripts.mappers.DbOrderItemNoteMapper;
 
@@ -18,11 +19,13 @@ import static scripts.constants.OrderItemNoteQueriesConstants.*;
 public class OrderItemNoteRepository implements CRUD<OrderItemNote, Integer> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
+    private DbMapper<OrderItemNote> mapper;
 
     public OrderItemNoteRepository(DbConnection connection) {
         this.connection = connection;
 
         connectionCloser = new ConnectionCloser();
+        mapper = new DbOrderItemNoteMapper();
     }
 
     @Override
@@ -33,9 +36,9 @@ public class OrderItemNoteRepository implements CRUD<OrderItemNote, Integer> {
             pstmt = connection.getOpenConnection().prepareStatement(INSERT_QUERY);
             pullPreparedStatement(pstmt, orderItemNote);
 
-            int insert_rows = pstmt.executeUpdate();
+            int insertedRows = pstmt.executeUpdate();
 
-            System.out.println("OrderItemNoteRepository -> created "+insert_rows+" orderItemNote(es)");
+            System.out.println("OrderItemNoteRepository -> created "+insertedRows+" orderItemNote(es)");
         } catch (SQLException ex){
             throw new RuntimeException("Create OrderItemNote error", ex);
         } finally {
@@ -52,7 +55,7 @@ public class OrderItemNoteRepository implements CRUD<OrderItemNote, Integer> {
             pstmt = connection.getOpenConnection().prepareStatement(FIND_ALL_QUERY);
             rs = pstmt.executeQuery();
 
-            List<OrderItemNote> orderItemNotes = new DbOrderItemNoteMapper().mapAll(rs);
+            List<OrderItemNote> orderItemNotes = mapper.mapAll(rs);
 
             System.out.println("OrderItemNoteRepository -> found "+ orderItemNotes.size()+ " orderItemNote(s)");
 
@@ -74,7 +77,7 @@ public class OrderItemNoteRepository implements CRUD<OrderItemNote, Integer> {
 
             rs = pstmt.executeQuery();
 
-            OrderItemNote orderItemNote = new DbOrderItemNoteMapper().mapFirst(rs);
+            OrderItemNote orderItemNote = mapper.mapFirst(rs);
 
             System.out.println("OrderItemNoteRepository -> found "+ orderItemNote);
 

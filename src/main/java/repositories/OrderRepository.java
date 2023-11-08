@@ -5,6 +5,7 @@ import entities.Order;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
+import scripts.interfaces.DbMapper;
 import scripts.mappers.DbCustomerMapper;
 import scripts.mappers.DbOrderMapper;
 
@@ -19,11 +20,13 @@ import static scripts.constants.OrderQueriesConstants.*;
 public class OrderRepository implements CRUD<Order, Integer> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
+    private DbMapper<Order> mapper;
 
     public OrderRepository(DbConnection connection) {
         this.connection = connection;
 
         connectionCloser = new ConnectionCloser();
+        mapper = new DbOrderMapper();
     }
 
     @Override
@@ -34,9 +37,9 @@ public class OrderRepository implements CRUD<Order, Integer> {
             pstmt = connection.getOpenConnection().prepareStatement(INSERT_QUERY);
             pullPreparedStatement(pstmt, order);
 
-            int insert_rows = pstmt.executeUpdate();
+            int insertedRows = pstmt.executeUpdate();
 
-            System.out.println("OrderRepository -> created "+insert_rows+" order(s)");
+            System.out.println("OrderRepository -> created "+insertedRows+" order(s)");
         } catch (SQLException ex){
             throw new RuntimeException("Create Order error", ex);
         } finally {
@@ -53,7 +56,7 @@ public class OrderRepository implements CRUD<Order, Integer> {
             pstmt = connection.getOpenConnection().prepareStatement(FIND_ALL_QUERY);
             rs = pstmt.executeQuery();
 
-            List<Order> orders = new DbOrderMapper().mapAll(rs);
+            List<Order> orders = mapper.mapAll(rs);
 
             System.out.println("OrderRepository -> found "+ orders.size()+" order(s)");
 
@@ -75,7 +78,7 @@ public class OrderRepository implements CRUD<Order, Integer> {
 
             rs = pstmt.executeQuery();
 
-            Order order = new DbOrderMapper().mapFirst(rs);
+            Order order = mapper.mapFirst(rs);
 
             System.out.println("OrderRepository -> found " + order);
 

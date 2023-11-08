@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 public class Customer {
-    private int id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private Date birthDate;
@@ -12,12 +12,12 @@ public class Customer {
     private String address;
     private String city;
     private String state;
-    private int points;
+    private Integer points;
 
     public Customer() {
     }
 
-    public Customer(int id, String firstName, String lastName, Date birthDate, String phone, String address, String city, String state, int points) {
+    public Customer(Integer id, String firstName, String lastName, Date birthDate, String phone, String address, String city, String state, Integer points) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -29,7 +29,7 @@ public class Customer {
         this.points = points;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -93,7 +93,7 @@ public class Customer {
         this.state = state;
     }
 
-    public int getPoints() {
+    public Integer getPoints() {
         return points;
     }
 

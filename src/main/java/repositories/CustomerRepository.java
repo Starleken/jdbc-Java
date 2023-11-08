@@ -5,6 +5,7 @@ import entities.Product;
 import scripts.database.ConnectionCloser;
 import scripts.database.DbConnection;
 import scripts.interfaces.CRUD;
+import scripts.interfaces.DbMapper;
 import scripts.mappers.DbCustomerMapper;
 import scripts.mappers.DbProductMapper;
 
@@ -19,10 +20,13 @@ public class CustomerRepository implements CRUD<Customer, Integer> {
     private ConnectionCloser connectionCloser;
     private DbConnection connection;
 
+    private DbMapper<Customer> mapper;
+
     public CustomerRepository(DbConnection connection) {
         this.connection = connection;
 
         connectionCloser = new ConnectionCloser();
+        mapper = new DbCustomerMapper();
     }
 
     @Override
@@ -33,9 +37,9 @@ public class CustomerRepository implements CRUD<Customer, Integer> {
             pstmt = connection.getOpenConnection().prepareStatement(INSERT_QUERY);
             pullPreparedStatement(pstmt, customer);
 
-            int insert_rows = pstmt.executeUpdate();
+            int insertedRows = pstmt.executeUpdate();
 
-            System.out.println("CustomerRepository -> created "+insert_rows+" customer(s)");
+            System.out.println("CustomerRepository -> created "+insertedRows+" customer(s)");
         } catch (SQLException ex){
             throw new RuntimeException("Create Customer error", ex);
         } finally {
@@ -52,7 +56,7 @@ public class CustomerRepository implements CRUD<Customer, Integer> {
             pstmt = connection.getOpenConnection().prepareStatement(FIND_ALL_QUERY);
             rs = pstmt.executeQuery();
 
-            List<Customer> customers = new DbCustomerMapper().mapAll(rs);
+            List<Customer> customers = mapper.mapAll(rs);
 
             System.out.println("CustomerRepository -> found "+customers.size()+" Customer(s)");
 
@@ -74,7 +78,7 @@ public class CustomerRepository implements CRUD<Customer, Integer> {
 
             rs = pstmt.executeQuery();
 
-            Customer customer = new DbCustomerMapper().mapFirst(rs);
+            Customer customer = mapper.mapFirst(rs);
 
             System.out.println("CustomerRepository -> found "+ customer);
 
