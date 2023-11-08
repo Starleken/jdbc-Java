@@ -1,4 +1,4 @@
-package Scripts.Constants;
+package scripts.constants;
 
 public class ShipperQueriesConstants {
     private final static String TABLE_NAME = "shippers";
